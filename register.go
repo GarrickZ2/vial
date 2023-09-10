@@ -136,9 +136,11 @@ func (r *register) RegisterConstruct(constructor interface{}, options ...applyOp
 	dependency := make([]*dependencyInfo, 0)
 	for i := 0; i < constructorType.NumIn(); i++ {
 		inputField := constructorType.In(i)
+		name := getQualifiedClassName(inputField)
 		dependency = append(dependency, &dependencyInfo{
-			name: getQualifiedClassName(inputField),
-			kind: getKindType(inputField),
+			name:      name,
+			kind:      getKindType(inputField),
+			reference: name,
 		})
 	}
 

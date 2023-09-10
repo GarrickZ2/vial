@@ -19,6 +19,9 @@ func (s *singletonEntry) GetValue() (interface{}, error) {
 	}
 	s.lock.Lock()
 	defer s.lock.Unlock()
+	if s.assigned {
+		return s.value, nil
+	}
 	result, err := c.buildStruct(s.metaInfo)
 	if err != nil {
 		return nil, err

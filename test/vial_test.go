@@ -2,16 +2,15 @@ package test
 
 import (
 	"fmt"
-	"testing"
-
 	"github.com/GarrickZ2/vial"
+	"testing"
 )
 
 type Agile interface {
 }
 
 type StructB struct {
-	B Agile `auto_wire:""`
+	B Agile `auto_wire:"" qualifier:"StructD"`
 }
 
 type TestStruct struct {
@@ -29,6 +28,13 @@ type StructD struct {
 	Data2 float32 `value:"13.2"`
 }
 
+func NewStructD(a Data) (StructD, error) {
+	return StructD{
+		Data:  "1",
+		Data2: float32(a),
+	}, nil
+}
+
 type Data int
 
 func NewData() Data {
@@ -39,8 +45,8 @@ func TestVial(t *testing.T) {
 	vial.RegisterStruct[TestStruct](vial.WithProtoType())
 	vial.RegisterStruct[StructB](vial.WithProtoType())
 	vial.RegisterStruct[*StructC](vial.WithSingleton())
-	vial.RegisterStruct[StructD]()
 	vial.RegisterConstructor(NewData)
+	vial.RegisterConstructor(NewStructD)
 	vial.Bind[Agile, *StructC](StructD{}, TestStruct{})
 
 	vial.Done()
